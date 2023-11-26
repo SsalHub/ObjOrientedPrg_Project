@@ -25,20 +25,23 @@ class Calendar(private val year: Int, private val month: Int) {
         }
         println()
     }
+    fun addSchedule(){
+
+    }
 }
 
 fun main() {
-    val scanner = Scanner(System.`in`)
+    val sc = Scanner(System.`in`)
 
-    // 년도 입력 받기
+
     print("조회할 달력의 년도를 입력하시오>> ")
-    val year = scanner.nextInt()
+    val year = sc.nextInt()
 
-    // 월 입력 받기
+
     print("조회할 달력의 월을 입력하시오>> ")
-    val month = scanner.nextInt()
+    val month = sc.nextInt()
 
-    // Calendar 클래스를 사용하여 달력 출력
+
     val calendar = Calendar(year, month)
     calendar.printCalendar()
 }
