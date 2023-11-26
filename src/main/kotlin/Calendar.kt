@@ -5,7 +5,7 @@ class Calendar(private val year: Int, private val month: Int) {
 
     fun printCalendar() {
         val startDate = LocalDate.of(year, month, 1)
-        val lastDay = startDate.plusMonths(1).minusDays(1)
+        val lastDay = startDate.withDayOfMonth(startDate.lengthOfMonth())
         val firstDayOfWeek = startDate.dayOfWeek.value % 7
 
         println("${year}년 ${month}월 달력")
@@ -26,7 +26,9 @@ class Calendar(private val year: Int, private val month: Int) {
         println()
     }
     fun addSchedule(){
-
+    println("[제목] : ")
+    println("[기간] : ")
+    println("[상세] : ")
     }
 }
 
