@@ -25,13 +25,11 @@ class Calendar(private val year: Int, private val month: Int) {
         }
         println()
     }
-    fun addSchedule(){
-    println("[제목] : ")
-    println("[기간] : ")
-    println("[상세] : ")
+
+    fun addSchedule() {
+
     }
 }
-
 fun main() {
     val sc = Scanner(System.`in`)
 
