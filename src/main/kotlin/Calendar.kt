@@ -2,13 +2,19 @@ import java.time.LocalDate
 import java.util.*
 
 class Calendar() {
+    var eventList:MutableList<Event> = mutableListOf()
+    var taskList:MutableList<Task> = mutableListOf()
+    companion object {
+        var count:Int = 0
+    }
+
     init {
         this.initCalendar()
     }
 
     fun initCalendar(): Unit
     {
-
+        Calendar.count = 0
     }
 
     fun printCalendar(year:Int, month:Int) {
