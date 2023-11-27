@@ -2,12 +2,16 @@ import java.time.LocalDate
 import java.util.*
 
 class Calendar() {
+    init {
+        this.initCalendar()
+    }
 
-    fun initCalendar():Unit
+    fun initCalendar(): Unit
     {
 
     }
-    fun printCalendar(year:Int,month:Int) {
+
+    fun printCalendar(year:Int, month:Int) {
         val startDate = LocalDate.of(year, month, 1)
         val lastDay = startDate.withDayOfMonth(startDate.lengthOfMonth())
         val firstDayOfWeek = startDate.dayOfWeek.value % 7
@@ -30,7 +34,8 @@ class Calendar() {
         println()
     }
 
-    fun addSchedule() {
+    fun addEvent(): Unit
+    {
         
     }
 }
