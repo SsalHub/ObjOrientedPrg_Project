@@ -9,15 +9,15 @@ class Calendar(private val year: Int, private val month: Int) {
         val firstDayOfWeek = startDate.dayOfWeek.value % 7
 
         println("${year}년 ${month}월 달력")
-        println("Sun  Mon  Tue  Wed  Thu  Fri  Sat")
+        println(" Sun   Mon   Tue   Wed   Thu   Fri   Sat")
 
         for (i in 1..firstDayOfWeek) {
-            print("     ")
+            print("      ")
         }
 
         var currentDay = startDate.dayOfMonth
         while (currentDay <= lastDay.dayOfMonth) {
-            print(String.format("%02d   ", currentDay))
+            print(String.format(" %02d   ", currentDay))
             if ((currentDay + firstDayOfWeek) % 7 == 0) {
                 println()
             }
