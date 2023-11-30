@@ -19,7 +19,7 @@ fun inputValidYear() : Int
 {
     var year = -1
     do {
-        print("연도(1~)를 입력하시오 >>");
+        print("연도(1~)를 입력하시오 >> ");
         year = readln().toInt();
     } while (year < 1)
     return year
@@ -29,7 +29,7 @@ fun inputValidMonth() : Int
 {
     var month = -1
     do {
-        print("월(1~12)를 입력하시오 >>")
+        print("월(1~12)를 입력하시오 >> ")
         month = readln().toInt();
     } while (month < 1 || 12 < month)
     return month
@@ -39,7 +39,7 @@ fun inputValidDay(year:Int, month:Int) : Int
 {
     var day = -1
     do {
-        print("연월에 알맞은 일을 입력하시오 >>");
+        print("연월에 알맞은 일을 입력하시오 >> ");
         day = readln().toInt();
     } while (day < 1 || lastDay(year, month) < day)
     return day

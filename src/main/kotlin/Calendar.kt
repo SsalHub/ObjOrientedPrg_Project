@@ -10,8 +10,8 @@ import input.inputValidDay
 class Calendar() {
     var eventList:MutableList<Event> = mutableListOf()
     var taskList:MutableList<Task> = mutableListOf()
-    val eventPath:String = "events.json"
-    val taskPath:String = "tasks.json"
+    val eventPath:String = "datas\\events.json"
+    val taskPath:String = "datas\\tasks.json"
 
     companion object {
         var eventCount:Int = 0
@@ -23,16 +23,17 @@ class Calendar() {
         /* Initialize Event List */
         val eventJson = loadEventDataFile()
         val eventArray = Gson().fromJson(eventJson, Array<Event>::class.java)
-        eventList = eventArray.toMutableList()
+        eventArray?.toMutableList()?.let { eventList.addAll((it)) }
 
-        /* Initialize Event List */
+        /* Initialize Task List */
         val taskJson = loadTaskDataFile()
         val taskArray = Gson().fromJson(taskJson, Array<Task>::class.java)
-        taskList = taskArray.toMutableList()
+        taskArray?.toMutableList()?.let { taskList.addAll(it) }
 
-        eventCount = eventList.size;
-        taskCount = taskList.size;
+        eventCount = eventList.size
+        taskCount = taskList.size
     }
+
     fun printCalendar(year:Int, month:Int) {
         val startDate = LocalDate.of(year, month, 1)
         val lastDay = startDate.withDayOfMonth(startDate.lengthOfMonth())
@@ -175,9 +176,25 @@ class Calendar() {
         saveTaskDataFile()
     }
 
-    private fun loadEventDataFile(): String = File(eventPath).readText()
+    private fun loadEventDataFile(): String
+    {
+        val f = File(eventPath)
+        if (f.exists())
+            return f.readText()
 
-    private fun loadTaskDataFile(): String = File(taskPath).readText()
+        f.writeText("")
+        return ""
+    }
+
+    private fun loadTaskDataFile(): String
+    {
+        val f = File(taskPath)
+        if (f.exists())
+            return f.readText()
+
+        f.writeText("")
+        return ""
+    }
 
     private fun saveEventDataFile(): Unit
     {
