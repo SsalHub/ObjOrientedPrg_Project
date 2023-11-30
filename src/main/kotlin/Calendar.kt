@@ -59,7 +59,7 @@ class Calendar() {
     fun searchEvent(calendar: Calendar) {
         println("[ 이벤트 검색 ]")
         print("검색어를 입력하세요: ")
-        val keyword = readln().trim()
+        val keyword = readln()
 
         val foundEvents = calendar.eventList.filter { it.title.contains(keyword, ignoreCase = true) }
         if (foundEvents.isEmpty()) {
@@ -78,7 +78,7 @@ class Calendar() {
     fun searchTask(calendar: Calendar) {
         println("[ 일정 검색 ]")
         print("검색어를 입력하세요: ")
-        val keyword = readln().trim()
+        val keyword = readln()
 
         val foundTasks = calendar.taskList.filter { it.title.contains(keyword, ignoreCase = true) }
         if (foundTasks.isEmpty()) {
@@ -219,7 +219,8 @@ fun main() {
     year = inputValidYear()
     month = inputValidMonth()
     calendar.printCalendar(year, month)
-
+    calendar.searchEvent(calendar)
+    calendar.searchTask(calendar)
     //jaewuk(calendar)
 }
 
