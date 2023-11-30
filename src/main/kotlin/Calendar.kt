@@ -55,7 +55,44 @@ class Calendar() {
         }
         println()
     }
+    fun searchEvent(calendar: Calendar) {
+        println("[ 이벤트 검색 ]")
+        print("검색어를 입력하세요: ")
+        val keyword = readln().trim()
 
+        val foundEvents = calendar.eventList.filter { it.title.contains(keyword, ignoreCase = true) }
+        if (foundEvents.isEmpty()) {
+            println("검색된 이벤트가 없습니다.")
+        } else {
+            println("[ 검색 결과 ]")
+            for (event in foundEvents) {
+                println("ID: ${event.id}")
+                println("제목: ${event.title}")
+                println("시작 시간: ${event.beginTime}")
+                println("종료 시간: ${event.endTime}")
+                println("세부 내용: ${event.detail}")
+            }
+        }
+    }
+    fun searchTask(calendar: Calendar) {
+        println("[ 일정 검색 ]")
+        print("검색어를 입력하세요: ")
+        val keyword = readln().trim()
+
+        val foundTasks = calendar.taskList.filter { it.title.contains(keyword, ignoreCase = true) }
+        if (foundTasks.isEmpty()) {
+            println("검색된 일정이 없습니다.")
+        } else {
+            println("[ 검색 결과 ]")
+            for (task in foundTasks) {
+                println("ID: ${task.id}")
+                println("제목: ${task.title}")
+                println("시작 시간: ${task.beginTime}")
+                println("세부 내용: ${task.detail}")
+
+            }
+        }
+    }
     fun addEvent(title:String, beginTime:String, endTime:String, detail:String): Unit
     {
         val e = Event(eventCount, title, beginTime, endTime, detail)
