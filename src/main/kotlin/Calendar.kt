@@ -69,8 +69,7 @@ class Calendar() {
             for (event in foundEvents) {
                 println("ID: ${event.id}")
                 println("제목: ${event.title}")
-                println("시작 시간: ${event.beginTime}")
-                println("종료 시간: ${event.endTime}")
+                println("기간: ${event.beginTime} ~ ${event.endTime}")
                 println("세부 내용: ${event.detail}")
             }
         }
@@ -94,6 +93,7 @@ class Calendar() {
             }
         }
     }
+
     fun addEvent(title:String, beginTime:String, endTime:String, detail:String): Unit
     {
         val e = Event(eventCount, title, beginTime, endTime, detail)
@@ -219,8 +219,9 @@ fun main() {
     year = inputValidYear()
     month = inputValidMonth()
     calendar.printCalendar(year, month)
-    calendar.searchEvent(calendar)
-    calendar.searchTask(calendar)
+
+    //calendar.searchEvent(calendar)
+    //calendar.searchTask(calendar)
     //jaewuk(calendar)
 }
 
@@ -259,6 +260,8 @@ fun jaewuk(calendar:Calendar)
     month = inputValidMonth()
     day = inputValidDay(year, month)
     calendar.removeEvent(year, month, day)
+
+
 
     /* 일정 삭제 */
     year = inputValidYear()
