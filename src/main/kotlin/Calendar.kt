@@ -6,6 +6,7 @@ import java.time.LocalDate
 import java.util.*
 import com.google.gson.Gson
 import input.inputValidDay
+import java.time.format.DateTimeFormatter
 
 class Calendar() {
     var eventList:MutableList<Event> = mutableListOf()
@@ -67,10 +68,9 @@ class Calendar() {
         } else {
             println("[ 검색 결과 ]")
             for (event in foundEvents) {
-                println("ID: ${event.id}")
-                println("제목: ${event.title}")
-                println("기간: ${event.beginTime} ~ ${event.endTime}")
-                println("세부 내용: ${event.detail}")
+                println("[제목]: ${event.title}")
+                println("[기간]: ${event.beginTime} ~ ${event.endTime}")
+                println("[세부 내용]: ${event.detail}")
             }
         }
     }
@@ -85,10 +85,9 @@ class Calendar() {
         } else {
             println("[ 검색 결과 ]")
             for (task in foundTasks) {
-                println("ID: ${task.id}")
-                println("제목: ${task.title}")
-                println("시작 시간: ${task.beginTime}")
-                println("세부 내용: ${task.detail}")
+                println("[제목]: ${task.title}")
+                println("[시작 시간]: ${task.beginTime}")
+                println("[세부 내용]: ${task.detail}")
 
             }
         }
@@ -219,7 +218,6 @@ fun main() {
     year = inputValidYear()
     month = inputValidMonth()
     calendar.printCalendar(year, month)
-
     //calendar.searchEvent(calendar)
     //calendar.searchTask(calendar)
     //jaewuk(calendar)
