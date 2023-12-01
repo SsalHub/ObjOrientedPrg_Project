@@ -92,7 +92,40 @@ class Calendar() {
             }
         }
     }
+    fun printDailyEvents(year:Int,month: Int,day: Int)
+    {
+        val formattedDate = "${year}/${month}/${day}"
+        val dailyEvents = eventList.filter { it.beginTime.startsWith(formattedDate) }
 
+        if (dailyEvents.isEmpty()) {
+            println("해당 날짜에 등록된 이벤트가 없습니다.")
+        } else {
+            println("${formattedDate}의 등록된 이벤트:")
+            dailyEvents.forEach {
+                println("[제목]: ${it.title}")
+                println("[기간]: ${it.beginTime} ~ ${it.endTime}")
+                println("[상세]: ${it.detail}\n")
+                print("")
+            }
+        }
+    }
+    fun printDailyTasks(year:Int,month:Int,day:Int)
+    {
+        val formattedDate = "${year}/${month}/${day}"
+        val dailyEvents = taskList.filter { it.beginTime.startsWith(formattedDate) }
+
+        if (dailyEvents.isEmpty()) {
+            println("해당 날짜에 등록된 할 일이 없습니다.")
+        } else {
+            println("${formattedDate}의 등록된 할 일:")
+            dailyEvents.forEach {
+                println("[제목]: ${it.title}")
+                println("[기간]: ${it.beginTime}")
+                println("[상세]: ${it.detail}\n")
+                print("")
+            }
+        }
+    }
     fun addEvent(title:String, beginTime:String, endTime:String, detail:String): Unit
     {
         val e = Event(eventCount, title, beginTime, endTime, detail)
@@ -220,6 +253,8 @@ fun main() {
     calendar.printCalendar(year, month)
     //calendar.searchEvent(calendar)
     //calendar.searchTask(calendar)
+    //calendar.printDailyEvents(year, month, day)
+    //calendar.printDailyTasks(year, month, day)
     //jaewuk(calendar)
 }
 
