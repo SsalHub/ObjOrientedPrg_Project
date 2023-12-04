@@ -6,7 +6,7 @@ import java.time.LocalDate
 import java.util.*
 import com.google.gson.Gson
 import input.inputValidDay
-import java.time.format.DateTimeFormatter
+
 
 class Calendar() {
     var eventList:MutableList<Event> = mutableListOf()
@@ -115,9 +115,9 @@ class Calendar() {
         val dailyEvents = taskList.filter { it.beginTime.startsWith(formattedDate) }
 
         if (dailyEvents.isEmpty()) {
-            println("해당 날짜에 등록된 할 일이 없습니다.")
+            println("해당 날짜에 등록된 일정이 없습니다.")
         } else {
-            println("${formattedDate}의 등록된 할 일:")
+            println("${formattedDate}의 등록된 일정:")
             dailyEvents.forEach {
                 println("[제목]: ${it.title}")
                 println("[기간]: ${it.beginTime}")
