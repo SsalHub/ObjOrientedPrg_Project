@@ -7,17 +7,13 @@ import java.util.*
 import com.google.gson.Gson
 import input.inputValidDay
 
-
-class Calendar() {
+object Calendar {
     var eventList:MutableList<Event> = mutableListOf()
     var taskList:MutableList<Task> = mutableListOf()
     val eventPath:String = "datas\\events.json"
     val taskPath:String = "datas\\tasks.json"
-
-    companion object {
-        var eventCount:Int = 0
-        var taskCount:Int = 0
-    }
+    var eventIDCount:Int = 0
+    var taskIDCount:Int = 0
 
     /* InitCalendar() */
     init {
@@ -31,16 +27,14 @@ class Calendar() {
         val taskArray = Gson().fromJson(taskJson, Array<Task>::class.java)
         taskArray?.toMutableList()?.let { taskList.addAll(it) }
 
-        eventCount = eventList.size
-        taskCount = taskList.size
+        eventIDCount = eventList.size
+        taskIDCount = taskList.size
     }
 
     fun printCalendar(year:Int, month:Int) {
-        val strFormat = "${year}${month}"
         val startDate = LocalDate.of(year, month, 1)
         val lastDay = startDate.withDayOfMonth(startDate.lengthOfMonth())
         val firstDayOfWeek = startDate.dayOfWeek.value % 7
-        var (events, tasks) = listOf(0, 0)
 
         println("${year}년 ${month}월 달력")
         println(" Sun   Mon   Tue   Wed   Thu   Fri   Sat")
@@ -51,9 +45,7 @@ class Calendar() {
 
         var currentDay = startDate.dayOfMonth
         while (currentDay <= lastDay.dayOfMonth) {
-            events = eventList.count { it.beginTime.startsWith(strFormat) }
-            tasks = taskList.count { it.beginTime.startsWith(strFormat) }
-            print(String.format(" %02d(${events}/${tasks})   ", currentDay))
+            print(String.format(" %02d   ", currentDay))
             if ((currentDay + firstDayOfWeek) % 7 == 0) {
                 println()
             }
@@ -61,79 +53,11 @@ class Calendar() {
         }
         println()
     }
-    fun searchEvent(calendar: Calendar) {
-        println("[ 이벤트 검색 ]")
-        print("검색어를 입력하세요: ")
-        val keyword = readln()
 
-        val foundEvents = calendar.eventList.filter { it.title.contains(keyword, ignoreCase = true) }
-        if (foundEvents.isEmpty()) {
-            println("검색된 이벤트가 없습니다.")
-        } else {
-            println("[ 검색 결과 ]")
-            for (event in foundEvents) {
-                println("[제목]: ${event.title}")
-                println("[기간]: ${event.beginTime} ~ ${event.endTime}")
-                println("[세부 내용]: ${event.detail}")
-            }
-        }
-    }
-    fun searchTask(calendar: Calendar) {
-        println("[ 일정 검색 ]")
-        print("검색어를 입력하세요: ")
-        val keyword = readln()
-
-        val foundTasks = calendar.taskList.filter { it.title.contains(keyword, ignoreCase = true) }
-        if (foundTasks.isEmpty()) {
-            println("검색된 일정이 없습니다.")
-        } else {
-            println("[ 검색 결과 ]")
-            for (task in foundTasks) {
-                println("[제목]: ${task.title}")
-                println("[시작 시간]: ${task.beginTime}")
-                println("[세부 내용]: ${task.detail}")
-
-            }
-        }
-    }
-    fun printDailyEvents(year:Int,month: Int,day: Int)
-    {
-        val formattedDate = "${year}${month}${day}"
-        val dailyEvents = eventList.filter { it.beginTime.startsWith(formattedDate) }
-
-        if (dailyEvents.isEmpty()) {
-            println("해당 날짜에 등록된 이벤트가 없습니다.")
-        } else {
-            println("${formattedDate}의 등록된 이벤트:")
-            dailyEvents.forEach {
-                println("[제목]: ${it.title}")
-                println("[기간]: ${it.beginTime} ~ ${it.endTime}")
-                println("[상세]: ${it.detail}\n")
-                print("")
-            }
-        }
-    }
-    fun printDailyTasks(year:Int,month:Int,day:Int)
-    {
-        val formattedDate = "${year}${month}${day}"
-        val dailyEvents = taskList.filter { it.beginTime.startsWith(formattedDate) }
-
-        if (dailyEvents.isEmpty()) {
-            println("해당 날짜에 등록된 일정이 없습니다.")
-        } else {
-            println("${formattedDate}의 등록된 일정:")
-            dailyEvents.forEach {
-                println("[제목]: ${it.title}")
-                println("[기간]: ${it.beginTime}")
-                println("[상세]: ${it.detail}\n")
-                print("")
-            }
-        }
-    }
     fun addEvent(title:String, beginTime:String, endTime:String, detail:String): Unit
     {
-        val e = Event(eventCount, title, beginTime, endTime, detail)
-        eventCount += 1
+        val e = Event(eventIDCount, title, beginTime, endTime, detail)
+        taskIDCount += 1
         eventList.add(e)
         eventList.sortedBy { it.beginTime }
         saveEventDataFile()
@@ -141,8 +65,8 @@ class Calendar() {
 
     fun addTask(title:String, beginTime:String, detail:String): Unit
     {
-        val t = Task(taskCount, title, beginTime, detail)
-        taskCount += 1
+        val t = Task(taskIDCount, title, beginTime, detail)
+        taskIDCount += 1
         taskList.add(t)
         taskList.sortedBy { it.beginTime }
         saveTaskDataFile()
@@ -247,62 +171,57 @@ class Calendar() {
 
 
 fun main() {
-    val calendar = Calendar()
+    //val calendar = Calendar()
     var (year, month, day) = listOf(0, 0, 0)
     var (title, beginTime, endTime, detail) = listOf("", "", "", "")
 
     /* 준성님 작업했던 내용 (year, month 입력받고 달력 출력) */
     year = inputValidYear()
     month = inputValidMonth()
-    calendar.printCalendar(year, month)
-    calendar.searchEvent(calendar)
-    //calendar.searchTask(calendar)
-    //calendar.printDailyEvents(year, month, day)
-    //calendar.printDailyTasks(year, month, day)
-    //jaewuk(calendar)
+    Calendar.printCalendar(year, month)
+
+    jaewuk()
 }
 
 
 
 
-fun jaewuk(calendar:Calendar)
+fun jaewuk()
 {
     var (year, month, day) = listOf(0, 0, 0)
     var (title, beginTime, endTime, detail) = listOf("", "", "", "")
 
-    /* 이벤트 추가 */
+    /* 이벤트 추가 *//*
     println("[ 달력에 추가할 이벤트 정보 입력 ]")
     print("1. 이벤트 제목 : ")
     title = readln()
-    print("2. 이벤트 시작 시간 : ")
+    print("2. 이벤트 시작 시간 (yyyymmdd hhmm) : ")
     beginTime = readln()
-    print("3. 이벤트 종료 시간 : ")
+    print("3. 이벤트 종료 시간 (yyyymmdd hhmm) : ")
     endTime = readln()
     print("4. 이벤트 설명 : ")
     detail = readln()
-    calendar.addEvent(title, beginTime, endTime, detail)
+    Calendar.addEvent(title, beginTime, endTime, detail)
 
-    /* 일정 추가 */
+    *//* 일정 추가 *//*
     println("[ 달력에 추가할 일정 정보 입력 ]")
     print("1. 일정 제목 : ")
     title = readln()
-    print("2. 일정 시작 시간 : ")
+    print("2. 일정 시작 시간 (yyyymmdd hhmm) : ")
     beginTime = readln()
     print("4. 일정 설명 : ")
     detail = readln()
-    calendar.addTask(title, beginTime, detail)
+    Calendar.addTask(title, beginTime, detail)*/
 
     /* 이벤트 삭제 */
     year = inputValidYear()
     month = inputValidMonth()
     day = inputValidDay(year, month)
-    calendar.removeEvent(year, month, day)
+    Calendar.removeEvent(year, month, day)
 
-
-
-    /* 일정 삭제 */
+     /*일정 삭제 */
     year = inputValidYear()
     month = inputValidMonth()
     day = inputValidDay(year, month)
-    calendar.removeTask(year, month, day)
+    Calendar.removeTask(year, month, day)
 }
