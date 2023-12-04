@@ -36,9 +36,11 @@ class Calendar() {
     }
 
     fun printCalendar(year:Int, month:Int) {
+        val strFormat = "${year}${month}"
         val startDate = LocalDate.of(year, month, 1)
         val lastDay = startDate.withDayOfMonth(startDate.lengthOfMonth())
         val firstDayOfWeek = startDate.dayOfWeek.value % 7
+        var (events, tasks) = listOf(0, 0)
 
         println("${year}년 ${month}월 달력")
         println(" Sun   Mon   Tue   Wed   Thu   Fri   Sat")
@@ -49,7 +51,9 @@ class Calendar() {
 
         var currentDay = startDate.dayOfMonth
         while (currentDay <= lastDay.dayOfMonth) {
-            print(String.format(" %02d   ", currentDay))
+            events = eventList.count { it.beginTime.startsWith(strFormat) }
+            tasks = taskList.count { it.beginTime.startsWith(strFormat) }
+            print(String.format(" %02d(${events}/${tasks})   ", currentDay))
             if ((currentDay + firstDayOfWeek) % 7 == 0) {
                 println()
             }
@@ -94,7 +98,7 @@ class Calendar() {
     }
     fun printDailyEvents(year:Int,month: Int,day: Int)
     {
-        val formattedDate = "${year}/${month}/${day}"
+        val formattedDate = "${year}${month}${day}"
         val dailyEvents = eventList.filter { it.beginTime.startsWith(formattedDate) }
 
         if (dailyEvents.isEmpty()) {
@@ -111,7 +115,7 @@ class Calendar() {
     }
     fun printDailyTasks(year:Int,month:Int,day:Int)
     {
-        val formattedDate = "${year}/${month}/${day}"
+        val formattedDate = "${year}${month}${day}"
         val dailyEvents = taskList.filter { it.beginTime.startsWith(formattedDate) }
 
         if (dailyEvents.isEmpty()) {
@@ -251,7 +255,7 @@ fun main() {
     year = inputValidYear()
     month = inputValidMonth()
     calendar.printCalendar(year, month)
-    //calendar.searchEvent(calendar)
+    calendar.searchEvent(calendar)
     //calendar.searchTask(calendar)
     //calendar.printDailyEvents(year, month, day)
     //calendar.printDailyTasks(year, month, day)
