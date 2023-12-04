@@ -43,10 +43,10 @@ class Calendar() {
         var (events, tasks) = listOf(0, 0)
 
         println("${year}년 ${month}월 달력")
-        println(" Sun   Mon   Tue   Wed   Thu   Fri   Sat")
+        println("   Sun       Mon        Tue        Wed        Thu        Fri        Sat")
 
         for (i in 1..firstDayOfWeek) {
-            print("      ")
+            print("           ")
         }
 
         var currentDay = startDate.dayOfMonth
@@ -259,7 +259,41 @@ fun main() {
     //calendar.searchTask(calendar)
     //calendar.printDailyEvents(year, month, day)
     //calendar.printDailyTasks(year, month, day)
-    //jaewuk(calendar)
+    /* 이벤트 추가
+    println("[ 달력에 추가할 이벤트 정보 입력 ]")
+    print("1. 이벤트 제목 : ")
+    title = readln()
+    print("2. 이벤트 시작 시간 : ")
+    beginTime = readln()
+    print("3. 이벤트 종료 시간 : ")
+    endTime = readln()
+    print("4. 이벤트 설명 : ")
+    detail = readln()
+    calendar.addEvent(title, beginTime, endTime, detail)
+*/
+    /* 일정 추가
+    println("[ 달력에 추가할 일정 정보 입력 ]")
+    print("1. 일정 제목 : ")
+    title = readln()
+    print("2. 일정 시작 시간 : ")
+    beginTime = readln()
+    print("4. 일정 설명 : ")
+    detail = readln()
+    calendar.addTask(title, beginTime, detail)
+*/
+    /* 이벤트 삭제 */
+    year = inputValidYear()
+    month = inputValidMonth()
+    day = inputValidDay(year, month)
+    calendar.removeEvent(year, month, day)
+
+
+
+    /* 일정 삭제 */
+    year = inputValidYear()
+    month = inputValidMonth()
+    day = inputValidDay(year, month)
+    calendar.removeTask(year, month, day)
 }
 
 
