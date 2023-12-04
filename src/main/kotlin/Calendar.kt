@@ -43,7 +43,7 @@ class Calendar() {
         var (events, tasks) = listOf(0, 0)
 
         println("${year}년 ${month}월 달력")
-        println("  Sun        Mon        Tue         Wed        Thu        Fri        Sat")
+        println(" Sun        Mon        Tue        Wed        Thu        Fri        Sat")
 
         for (i in 1..firstDayOfWeek) {
             print("           ")
@@ -53,7 +53,15 @@ class Calendar() {
         while (currentDay <= lastDay.dayOfMonth) {
             events = eventList.count { it.beginTime.startsWith(strFormat) }
             tasks = taskList.count { it.beginTime.startsWith(strFormat) }
-            print(String.format(" %02d(${events}/${tasks})   ", currentDay))
+
+            if(events == 0 && tasks == 0){
+                print(String.format(" %02d        ", currentDay))
+            }
+            else {
+                print(String.format(" %02d(${events}/${tasks})   ", currentDay))
+            }
+
+
             if ((currentDay + firstDayOfWeek) % 7 == 0) {
                 println()
             }
