@@ -44,3 +44,9 @@ fun inputValidDay(year:Int, month:Int) : Int
     } while (day < 1 || lastDay(year, month) < day)
     return day
 }
+
+fun isValidYear(year:Int) : Boolean = (1 <= year)
+
+fun isValidMonth(month:Int) : Boolean = (month in 1..12)
+
+fun isValidDay(year:Int, month:Int, day:Int) : Boolean = (day in 1..lastDay(year, month))

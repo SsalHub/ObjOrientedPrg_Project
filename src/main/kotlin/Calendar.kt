@@ -1,23 +1,16 @@
-import input.inputValidYear
-import input.inputValidMonth
-
 import java.io.File
 import java.time.LocalDate
-import java.util.*
 import com.google.gson.Gson
-import input.inputValidDay
+import input.*
 
 
-class Calendar() {
+object Calendar {
     var eventList:MutableList<Event> = mutableListOf()
     var taskList:MutableList<Task> = mutableListOf()
     val eventPath:String = "datas\\events.json"
     val taskPath:String = "datas\\tasks.json"
-
-    companion object {
-        var eventCount:Int = 0
-        var taskCount:Int = 0
-    }
+    var eventIDCount:Int = 0
+    var taskIDCount:Int = 0
 
     /* InitCalendar() */
     init {
@@ -31,8 +24,8 @@ class Calendar() {
         val taskArray = Gson().fromJson(taskJson, Array<Task>::class.java)
         taskArray?.toMutableList()?.let { taskList.addAll(it) }
 
-        eventCount = eventList.size
-        taskCount = taskList.size
+        eventIDCount = eventList.size
+        taskIDCount = taskList.size
     }
 
     fun printCalendar(year:Int, month:Int) {
@@ -69,12 +62,12 @@ class Calendar() {
         }
         println()
     }
-    fun searchEvent(calendar: Calendar) {
-        println("[ 이벤트 검색 ]")
+    fun searchEvent(keyword:String) {
+        /*println("[ 이벤트 검색 ]")
         print("검색어를 입력하세요: ")
-        val keyword = readln()
+        val keyword = readln()*/
 
-        val foundEvents = calendar.eventList.filter { it.title.contains(keyword, ignoreCase = true) }
+        val foundEvents = Calendar.eventList.filter { it.title.contains(keyword, ignoreCase = true) }
         if (foundEvents.isEmpty()) {
             println("검색된 이벤트가 없습니다.")
         } else {
@@ -86,12 +79,12 @@ class Calendar() {
             }
         }
     }
-    fun searchTask(calendar: Calendar) {
-        println("[ 일정 검색 ]")
+    fun searchTask(keyword:String) {
+        /*println("[ 일정 검색 ]")
         print("검색어를 입력하세요: ")
-        val keyword = readln()
+        val keyword = readln()*/
 
-        val foundTasks = calendar.taskList.filter { it.title.contains(keyword, ignoreCase = true) }
+        val foundTasks = Calendar.taskList.filter { it.title.contains(keyword, ignoreCase = true) }
         if (foundTasks.isEmpty()) {
             println("검색된 일정이 없습니다.")
         } else {
@@ -138,33 +131,43 @@ class Calendar() {
             }
         }
     }
-    fun addEvent(title:String, beginTime:String, endTime:String, detail:String): Unit
+    fun addEvent(title:String, beginTime:String, endTime:String, detail:String)
     {
-        val e = Event(eventCount, title, beginTime, endTime, detail)
-        eventCount += 1
+        val e = Event(eventIDCount, title, beginTime, endTime, detail)
+        eventIDCount += 1
         eventList.add(e)
         eventList.sortedBy { it.beginTime }
         saveEventDataFile()
     }
 
-    fun addTask(title:String, beginTime:String, detail:String): Unit
+    fun addTask(title:String, beginTime:String, detail:String)
     {
-        val t = Task(taskCount, title, beginTime, detail)
-        taskCount += 1
+        val t = Task(taskIDCount, title, beginTime, detail)
+        taskIDCount += 1
         taskList.add(t)
         taskList.sortedBy { it.beginTime }
         saveTaskDataFile()
     }
 
-    fun removeEvent(year:Int, month:Int, day:Int): Unit
+    fun editEvent()
+    {
+
+    }
+
+    fun editTask()
+    {
+
+    }
+
+    fun removeEvent(year:Int, month:Int, day:Int)
     {
         /* 1. 날짜에 존재하는 이벤트들을 탐색함 */
-        val d = "${year}${month}${day}"
+        val d = "%04d%02d%02d".format(year, month, day)
         val events:Array<Event> = eventList.filter { it.beginTime.contains(d) }.toTypedArray()
         if (events.isEmpty()) return
 
         /* 2. 이벤트들에 0, 1, 2... n 까지 번호를 매기고, 정수 k를 입력받음 */
-        var LOOP:Boolean = true
+        var LOOP = true
         var selected:Int
         println("\n[ ${year}.${month}.${day} 에 존재하는 이벤트 목록 ]")
         println("* 다음 중 삭제를 원하는 이벤트의 id를 입력해 주세요.")
@@ -188,15 +191,15 @@ class Calendar() {
         saveEventDataFile()
     }
 
-    fun removeTask(year:Int, month:Int, day:Int): Unit
+    fun removeTask(year:Int, month:Int, day:Int)
     {
         /* 1. 날짜에 존재하는 일정들을 탐색함 */
-        val d = "${year}${month}${day}"
+        val d = "%04d%02d%02d".format(year, month, day)
         val tasks:Array<Task> = taskList.filter { it.beginTime.contains(d) }.toTypedArray()
         if (tasks.isEmpty()) return
 
         /* 2. 일정들에 0, 1, 2... n 까지 번호를 매기고, 정수 k를 입력받음 */
-        var LOOP:Boolean = true
+        var LOOP = true
         var selected:Int
         println("\n[ ${year}.${month}.${day} 에 존재하는 일정 목록 ]")
         println("* 다음 중 삭제를 원하는 일정의 id를 입력해 주세요.")
@@ -226,7 +229,7 @@ class Calendar() {
         if (f.exists())
             return f.readText()
 
-        f.writeText("")
+        f.createNewFile()
         return ""
     }
 
@@ -236,17 +239,17 @@ class Calendar() {
         if (f.exists())
             return f.readText()
 
-        f.writeText("")
+        f.createNewFile()
         return ""
     }
 
-    private fun saveEventDataFile(): Unit
+    private fun saveEventDataFile()
     {
         val eventJson = Gson().toJson(eventList)
         File(eventPath).writeText(eventJson)
     }
 
-    private fun saveTaskDataFile(): Unit
+    private fun saveTaskDataFile()
     {
         val taskJson = Gson().toJson(taskList)
         File(taskPath).writeText(taskJson)
@@ -255,40 +258,35 @@ class Calendar() {
 
 
 fun main() {
-    val calendar = Calendar()
-    var (year, month, day) = listOf(0, 0, 0)
-    var (title, beginTime, endTime, detail) = listOf("", "", "", "")
+    //val calendar = Calendar()
+    //var (title, beginTime, endTime, detail) = listOf("", "", "", "")
 
     /* 준성님 작업했던 내용 (year, month 입력받고 달력 출력) */
-    year = inputValidYear()
-    month = inputValidMonth()
-    calendar.printCalendar(year, month)
-    calendar.searchEvent(calendar)
-    //calendar.searchTask(calendar)
-    //calendar.printDailyEvents(year, month, day)
-    //calendar.printDailyTasks(year, month, day)
-    //jaewuk(calendar)
+    var year = inputValidYear()
+    var month = inputValidMonth()
+    Calendar.printCalendar(year, month)
+    //Calendar.searchEvent()
+    //Calendar.searchTask()
+    //Calendar.printDailyEvents(year, month, day)
+    //Calendar.printDailyTasks(year, month, day)
+    //jaewuk()
+    runCalendar()
 }
 
 
-
-
-fun jaewuk(calendar:Calendar)
+fun jaewuk()
 {
-    var (year, month, day) = listOf(0, 0, 0)
-    var (title, beginTime, endTime, detail) = listOf("", "", "", "")
-
     /* 이벤트 추가 */
     println("[ 달력에 추가할 이벤트 정보 입력 ]")
     print("1. 이벤트 제목 : ")
-    title = readln()
+    var title = readln()
     print("2. 이벤트 시작 시간 : ")
-    beginTime = readln()
+    var beginTime = readln()
     print("3. 이벤트 종료 시간 : ")
-    endTime = readln()
+    var endTime = readln()
     print("4. 이벤트 설명 : ")
-    detail = readln()
-    calendar.addEvent(title, beginTime, endTime, detail)
+    var detail = readln()
+    Calendar.addEvent(title, beginTime, endTime, detail)
 
     /* 일정 추가 */
     println("[ 달력에 추가할 일정 정보 입력 ]")
@@ -298,19 +296,200 @@ fun jaewuk(calendar:Calendar)
     beginTime = readln()
     print("4. 일정 설명 : ")
     detail = readln()
-    calendar.addTask(title, beginTime, detail)
+    Calendar.addTask(title, beginTime, detail)
 
     /* 이벤트 삭제 */
-    year = inputValidYear()
-    month = inputValidMonth()
-    day = inputValidDay(year, month)
-    calendar.removeEvent(year, month, day)
-
-
+    var year = inputValidYear()
+    var month = inputValidMonth()
+    var day = inputValidDay(year, month)
+    Calendar.removeEvent(year, month, day)
 
     /* 일정 삭제 */
     year = inputValidYear()
     month = inputValidMonth()
     day = inputValidDay(year, month)
-    calendar.removeTask(year, month, day)
+    Calendar.removeTask(year, month, day)
+}
+
+
+
+fun runCalendar()
+{
+    var select = 0
+    while (true)
+    {
+        println("메뉴 번호를 선택하시오 (1:종료, 2:달력 조회, 3:이벤트/일정 조회, 4: 이벤트/일정 제목으로 검색, 5:이벤트/일정 추가, 6:이벤트/일정 수정, 7:이벤트/일정 삭제)")
+        print(" >> ")
+        select = readln().toInt()
+
+        when (select)
+        {
+            /* 종료 */
+            1 -> {
+                println("달력 프로그램을 종료합니다.\n\n")
+                return
+            }
+
+            /* 달력 조회 */
+            2 -> {
+                println("[ 달력 조회 ]")
+                var (year, month) = arrayOf(0, 0)
+                while(true)
+                {
+                    print("조회할 달력의 년도를 입력하시오 >> ")
+                    year = readln().toInt()
+                    if (isValidYear(year)) break
+                    println("올바른 년도를 입력해주세요!\n")
+                }
+                while(true)
+                {
+                    print("조회할 달력의 월을 입력하시오 >> ")
+                    month = readln().toInt()
+                    if (isValidMonth(month)) break
+                    println("올바른 월을 입력해주세요!\n")
+                }
+                Calendar.printCalendar(year, month)
+
+                println()
+            }
+
+            /* 이벤트/일정 조회 */
+            3 -> {
+                println("[ 이벤트/일정 조회 ]")
+                var (year, month, day) = arrayOf(0, 0, 0)
+                while (true)
+                {
+                    try {
+                        print("조회할 이벤트/일정 날짜를 입력하시오(yyyy/MM/dd) >> ")
+                        readln().split('/').let {
+                            year = it[0].toInt()
+                            month = it[1].toInt()
+                            day = it[2].toInt()
+                        }
+                        break
+                    } catch (e : NumberFormatException) {
+                        println("올바른 날짜를 입력해주세요! (yyyy/MM/dd)\n")
+                        continue
+                    } catch(e : ArrayIndexOutOfBoundsException) {
+                        println("올바른 날짜를 입력해주세요! (yyyy/MM/dd)\n")
+                        continue
+                    }
+                }
+                println("[ ${year}년 ${month}월 ${day}일에 등록된 이벤트 ]")
+                Calendar.printDailyEvents(year, month, day)
+
+                println("[ ${year}년 ${month}월 ${day}일에 등록된 일정 ]")
+                Calendar.printDailyTasks(year, month, day)
+
+                println()
+            }
+
+            /* 이벤트/일정 검색 */
+            4 -> {
+                println("[ 이벤트/일정 검색 ]")
+                print("검색어(title)를 입력하세요 >> ")
+                val keyword = readln()
+
+                println("[ 이벤트 검색 결과 ]")
+                Calendar.searchEvent(keyword)
+                println()
+                println("[ 일정 검색 결과 ]")
+                Calendar.searchTask(keyword)
+
+                println()
+            }
+
+            /* 이벤트/일정 추가 */
+            5 -> {
+                println("[ 이벤트/일정 추가 ]")
+                var select = 0
+                while (true)
+                {
+                    print("이벤트와 일정 중 어떤 것을 추가하시겠습니까? (1:이벤트, 2:일정, 3:이전으로) >> ")
+                    select = readln().toInt()
+                    when (select)
+                    {
+                        /* 이벤트 추가 */
+                        1 -> {
+                            println("[ 달력에 추가할 이벤트 정보 입력 ]")
+                            print("1. 이벤트 제목을 입력하시오 >> ")
+                            val title = readln()
+                            print("2. 이벤트 시작 시간 (yyyy/MM/dd hh:mm:ss) >> ")
+                            val beginTime = readln()
+                            print("3. 이벤트 종료 시간 (yyyy/MM/dd hh:mm:ss) >> ")
+                            val endTime = readln()
+                            print("4. 이벤트 설명 >> ")
+                            val detail = readln()
+                            Calendar.addEvent(title, beginTime, endTime, detail)
+                        }
+
+                        /* 일정 추가 */
+                        2 -> {
+                            println("[ 달력에 추가할 일정 정보 입력 ]")
+                            print("1. 일정 제목 : ")
+                            val title = readln()
+                            print("2. 일정 시작 시간 : ")
+                            val beginTime = readln()
+                            print("4. 일정 설명 : ")
+                            val detail = readln()
+                            Calendar.addTask(title, beginTime, detail)
+                        }
+
+                        /* 이전으로 돌아가기 */
+                        3 -> {
+                            break
+                        }
+
+                        /* 그 외 입력 */
+                        else -> {
+                            println("올바른 값을 입력해주세요!\n")
+                            continue
+                        }
+                    }
+                    break
+                }
+                println()
+            }
+
+            /* 이벤트/일정 수정 */
+            6 -> {
+                println("[ 이벤트/일정 수정 ]")
+                var (select, year, month, day, i) = arrayOf(0, 0, 0, 0, 0)
+
+                while (true)
+                {
+                    try {
+                        print("조회할 이벤트/일정 날짜를 입력하시오(yyyy/MM/dd) >> ")
+                        readln().split('/').let {
+                            year = it[0].toInt()
+                            month = it[1].toInt()
+                            day = it[2].toInt()
+                        }
+                        break
+                    } catch (e : NumberFormatException) {
+                        println("올바른 날짜를 입력해주세요! (yyyy/MM/dd)\n")
+                        continue
+                    } catch(e : ArrayIndexOutOfBoundsException) {
+                        println("올바른 날짜를 입력해주세요! (yyyy/MM/dd)\n")
+                        continue
+                    }
+                }
+
+
+                println()
+            }
+
+            /* 이벤트/일정 삭제 */
+            7 -> {
+
+                println()
+            }
+
+            /* 그 외 입력 */
+            else -> {
+                println("올바른 값을 입력해주세요!\n")
+                continue
+            }
+        }
+    }
 }
