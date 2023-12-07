@@ -5,12 +5,12 @@ import input.*
 
 
 object Calendar {
-    var eventList:MutableList<Event> = mutableListOf()
-    var taskList:MutableList<Task> = mutableListOf()
-    val eventPath:String = "datas\\events.json"
-    val taskPath:String = "datas\\tasks.json"
-    var eventIDCount:Int = 0
-    var taskIDCount:Int = 0
+    private var eventList:MutableList<Event> = mutableListOf()
+    private var taskList:MutableList<Task> = mutableListOf()
+    private val eventPath:String = "datas\\events.json"
+    private val taskPath:String = "datas\\tasks.json"
+    private var eventIDCount:Int = 0
+    private var taskIDCount:Int = 0
 
     /* InitCalendar() */
     init {
@@ -97,6 +97,11 @@ object Calendar {
             }
         }
     }
+
+    fun getDailyEvents(keyword:String):List<Event> = eventList.filter { it.beginTime.startsWith(keyword) }
+
+    fun getDailyTasks(keyword:String):List<Task> = taskList.filter { it.beginTime.startsWith(keyword) }
+
     fun printDailyEvents(year:Int,month: Int,day: Int)
     {
         val formattedDate = "${year}${month}${day}"
@@ -405,7 +410,7 @@ fun runCalendar()
                 var select = 0
                 while (true)
                 {
-                    print("이벤트와 일정 중 어떤 것을 추가하시겠습니까? (1:이벤트, 2:일정, 3:이전으로) >> ")
+                    print("이벤트/일정 중 어떤 것을 추가하시겠습니까? (1:이벤트 2:일정, 3:이전으로) >> ")
                     select = readln().toInt()
                     when (select)
                     {
@@ -437,6 +442,7 @@ fun runCalendar()
 
                         /* 이전으로 돌아가기 */
                         3 -> {
+                            println("이전으로 돌아갑니다.\n")
                             break
                         }
 
@@ -474,7 +480,23 @@ fun runCalendar()
                         continue
                     }
                 }
+                val keyword = "%04d%02d%02d".format(year, month, day)
 
+                val foundEvents = Calendar.getDailyEvents(keyword)
+                val foundTasks = Calendar.getDailyTasks(keyword)
+                if (foundEvents.size + foundTasks.size <= 0)
+                {
+                    println("해당 날짜에 등록된 이벤트/일정이 없습니다!\n")
+                    println("이전으로 돌아갑니다.\n\n")
+                    break
+                }
+
+                println("\n아래 중 수정할 이벤트/일정의 번호를 입력해주세요.\n")
+                for (e in foundEvents)
+                {
+                    println("[${i}] ")
+                    i += 1
+                }
 
                 println()
             }
