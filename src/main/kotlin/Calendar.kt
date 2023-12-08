@@ -43,8 +43,9 @@ object Calendar {
 
         var currentDay = startDate.dayOfMonth
         while (currentDay <= lastDay.dayOfMonth) {
-            events = eventList.count { it.beginTime.startsWith(strFormat) }
-            tasks = taskList.count { it.beginTime.startsWith(strFormat) }
+            val formattedDate = "%04d%02d%02d".format(year, month, currentDay)
+            events = eventList.count { it.beginTime.startsWith(formattedDate) }
+            tasks = taskList.count { it.beginTime.startsWith(formattedDate) }
 
             if(events == 0 && tasks == 0){
                 print(String.format(" %02d        ", currentDay))
