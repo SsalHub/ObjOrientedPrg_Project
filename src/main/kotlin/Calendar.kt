@@ -217,6 +217,7 @@ object Calendar {
         println("[제목]: ${eventList[target].title}")
         println("[기간]: ${eventList[target].beginTime} ~ ${eventList[target].endTime}")
         println("[상세]: ${eventList[target].detail}\n")
+        eventList.sortedBy { it.beginTime }
         saveEventDataFile()
     }
 
@@ -241,6 +242,7 @@ object Calendar {
         println("[제목]: ${eventList[result].title}")
         println("[기간]: ${eventList[result].beginTime} ~ ${eventList[result].endTime}")
         println("[상세]: ${eventList[result].detail}\n")
+        eventList.sortedBy { it.beginTime }
         saveEventDataFile()
     }
 
@@ -301,6 +303,7 @@ object Calendar {
         println("[제목]: ${taskList[target].title}")
         println("[시작 시간]: ${taskList[target].beginTime}")
         println("[상세]: ${taskList[target].detail}\n")
+        taskList.sortedBy { it.beginTime }
         saveTaskDataFile()
     }
 
@@ -323,6 +326,7 @@ object Calendar {
         println("[제목]: ${taskList[result].title}")
         println("[시작 시간]: ${taskList[result].beginTime}")
         println("[상세]: ${taskList[result].detail}\n")
+        taskList.sortedBy { it.beginTime }
         saveTaskDataFile()
     }
 
