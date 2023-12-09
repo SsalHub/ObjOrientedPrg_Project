@@ -67,7 +67,7 @@ object Calendar {
         print("검색어를 입력하세요: ")
         val keyword = readln()*/
 
-        val foundEvents = Calendar.eventList.filter { it.title.contains(keyword, ignoreCase = true) }
+        val foundEvents = Calendar.eventList.filter { it.title.contains(keyword) }
         println("[ 이벤트 검색 결과 ]")
         if (foundEvents.isEmpty()) {
             println("검색된 이벤트가 없습니다.")
@@ -87,7 +87,7 @@ object Calendar {
         print("검색어를 입력하세요: ")
         val keyword = readln()*/
 
-        val foundTasks = Calendar.taskList.filter { it.title.contains(keyword, ignoreCase = true) }
+        val foundTasks = Calendar.taskList.filter { it.title.contains(keyword) }
         println("[ 일정 검색 결과 ]")
         if (foundTasks.isEmpty()) {
             println("검색된 일정이 없습니다.")
