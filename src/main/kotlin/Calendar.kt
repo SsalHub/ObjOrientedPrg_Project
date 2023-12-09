@@ -145,6 +145,7 @@ object Calendar {
         eventList.add(e)
         eventList.sortedBy { it.beginTime }
         saveEventDataFile()
+        println("이벤트가 정상적으로 등록되었습니다! - \"${e.title}\"")
     }
 
     fun addTask(title:String, beginTime:String, detail:String)
@@ -154,6 +155,7 @@ object Calendar {
         taskList.add(t)
         taskList.sortedBy { it.beginTime }
         saveTaskDataFile()
+        println("일정이 정상적으로 등록되었습니다! - \"${t.title}\"")
     }
 
     fun editEvent(year:Int, month:Int, day:Int)
@@ -502,60 +504,14 @@ object Calendar {
 
 
 fun main() {
-    //val calendar = Calendar()
     //var (title, beginTime, endTime, detail) = listOf("", "", "", "")
 
-    /* 준성님 작업했던 내용 (year, month 입력받고 달력 출력) */
-    /*var year = inputValidYear()
-    var month = inputValidMonth()*/
-    //Calendar.printCalendar(year, month)
-    //Calendar.searchEvent()
-    //Calendar.searchTask()
-    //Calendar.printDailyEvents(year, month, day)
-    //Calendar.printDailyTasks(year, month, day)
-    //jaewuk()
-    runCalendar()
-}
-
-
-fun jaewuk()
-{
-    /* 이벤트 추가 */
-    println("[ 달력에 추가할 이벤트 정보 입력 ]")
-    print("1. 이벤트 제목 : ")
-    var title = readln()
-    print("2. 이벤트 시작 시간 : ")
-    var beginTime = readln()
-    print("3. 이벤트 종료 시간 : ")
-    var endTime = readln()
-    print("4. 이벤트 설명 : ")
-    var detail = readln()
-    Calendar.addEvent(title, beginTime, endTime, detail)
-
-    /* 일정 추가 */
-    println("[ 달력에 추가할 일정 정보 입력 ]")
-    print("1. 일정 제목 : ")
-    title = readln()
-    print("2. 일정 시작 시간 : ")
-    beginTime = readln()
-    print("4. 일정 설명 : ")
-    detail = readln()
-    Calendar.addTask(title, beginTime, detail)
-
-    /* 이벤트 삭제 */
+    /*// 준성님 작업했던 내용 (year, month 입력받고 달력 출력)
     var year = inputValidYear()
     var month = inputValidMonth()
-    var day = inputValidDay(year, month)
-    Calendar.removeEvent(year, month, day)
-
-    /* 일정 삭제 */
-    year = inputValidYear()
-    month = inputValidMonth()
-    day = inputValidDay(year, month)
-    Calendar.removeTask(year, month, day)
+    Calendar.printCalendar(year, month)*/
+    runCalendar()
 }
-
-
 
 fun runCalendar()
 {
