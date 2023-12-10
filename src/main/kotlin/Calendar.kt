@@ -28,7 +28,6 @@ object Calendar {
     }
 
     fun printCalendar(year:Int, month:Int) {
-        val strFormat = "${year}${month}"
         val startDate = LocalDate.of(year, month, 1)
         val lastDay = startDate.withDayOfMonth(startDate.lengthOfMonth())
         val firstDayOfWeek = startDate.dayOfWeek.value % 7
@@ -63,11 +62,7 @@ object Calendar {
     }
 
     fun searchEvent(keyword:String): List<Event> {
-        /*println("[ 이벤트 검색 ]")
-        print("검색어를 입력하세요: ")
-        val keyword = readln()*/
-
-        val foundEvents = Calendar.eventList.filter { it.title.contains(keyword) }
+        val foundEvents = eventList.filter { it.title.contains(keyword) }
         println("[ 이벤트 검색 결과 ]")
         if (foundEvents.isEmpty()) {
             println("검색된 이벤트가 없습니다.")
@@ -83,11 +78,7 @@ object Calendar {
     }
 
     fun searchTask(keyword:String): List<Task> {
-        /*println("[ 일정 검색 ]")
-        print("검색어를 입력하세요: ")
-        val keyword = readln()*/
-
-        val foundTasks = Calendar.taskList.filter { it.title.contains(keyword) }
+        val foundTasks = taskList.filter { it.title.contains(keyword) }
         println("[ 일정 검색 결과 ]")
         if (foundTasks.isEmpty()) {
             println("검색된 일정이 없습니다.")
@@ -110,16 +101,15 @@ object Calendar {
         if (dailyEvents.isEmpty()) {
             println("해당 날짜에 등록된 이벤트가 없습니다.")
         } else {
-            println("${year}년 ${month}월 ${day}일에 등록된 이벤트 :")
+            println("[ ${year}년 ${month}월 ${day}일에 등록된 이벤트 ]")
             dailyEvents.forEach {
-                println("[이벤트 ID]: ${it.id}")
-                println("[제목]: ${it.title}")
-                println("[기간]: ${convertToExternalFormat(it.beginTime)} ~ ${convertToExternalFormat(it.endTime)}")
-                println("[상세]: ${it.detail}\n")
-                print("")
+                println("[이벤트 제목]: ${it.title}")
+                println("[이벤트 기간]: ${convertToExternalFormat(it.beginTime)} ~ ${convertToExternalFormat(it.endTime)}")
+                println("[이벤트 상세]: ${it.detail}\n")
             }
         }
     }
+
     fun printDailyTasks(year:Int,month:Int,day:Int)
     {
         val formattedDate = "%04d%02d%02d".format(year, month, day)
@@ -128,16 +118,15 @@ object Calendar {
         if (dailyEvents.isEmpty()) {
             println("해당 날짜에 등록된 일정이 없습니다.")
         } else {
-            println("${formattedDate}의 등록된 일정:")
+            println("[ ${year}년 ${month}월 ${day}일에 등록된 일정 ]")
             dailyEvents.forEach {
-                println("[일정 ID]: ${it.id}")
-                println("[제목]: ${it.title}")
-                println("[기간]: ${convertToExternalFormat(it.beginTime)}")
-                println("[상세]: ${it.detail}\n")
-                print("")
+                println("[일정 제목]: ${it.title}")
+                println("[일정 시작 시간]: ${convertToExternalFormat(it.beginTime)}")
+                println("[일정 상세]: ${it.detail}\n")
             }
         }
     }
+
     fun addEvent(title:String, beginTime:String, endTime:String, detail:String)
     {
         val e = Event(idCount, title, convertToInternalFormat(beginTime), convertToInternalFormat(endTime), detail)
@@ -168,7 +157,6 @@ object Calendar {
             println("해당 날짜에 이벤트가 존재하지 않습니다.\n")
             return
         }
-
         /* 2. 이벤트들에 0, 1, 2... n 까지 번호를 매기고, 정수 k를 입력받음 */
         var target:Int?
         var selected:Int
@@ -189,7 +177,6 @@ object Calendar {
                 println("id가 일치하는 이벤트가 없습니다!\n다시 입력해주세요.\n")
                 continue
             }
-
             // if found event
             target = eventList.indices.find { eventList[it].id == selected }?.let {
                 /* 3. 수정할 정보 입력받은 후 수정 완료 */
@@ -212,13 +199,12 @@ object Calendar {
             }
             break
         }
-
         /* 4. 데이터파일 갱신 */
         println("정상적으로 이벤트 수정이 완료되었습니다!\n")
-        println("[이벤트 ID]: ${eventList[target!!].id}")
-        println("[제목]: ${eventList[target].title}")
-        println("[기간]: ${eventList[target].beginTime} ~ ${eventList[target].endTime}")
-        println("[상세]: ${eventList[target].detail}\n")
+        target = target!!
+        println("[이벤트 제목]: ${eventList[target].title}")
+        println("[이벤트 기간]: ${eventList[target].beginTime} ~ ${eventList[target].endTime}")
+        println("[이벤트 상세]: ${eventList[target].detail}\n")
         eventList.sortedBy { it.beginTime }
         saveEventDataFile()
     }
@@ -240,10 +226,9 @@ object Calendar {
         }
         /* 4. 데이터파일 갱신 */
         println("정상적으로 이벤트 수정이 완료되었습니다!\n")
-        println("[이벤트 ID]: ${eventList[result].id}")
-        println("[제목]: ${eventList[result].title}")
-        println("[기간]: ${eventList[result].beginTime} ~ ${eventList[result].endTime}")
-        println("[상세]: ${eventList[result].detail}\n")
+        println("[이벤트 제목]: ${eventList[result].title}")
+        println("[이벤트 기간]: ${eventList[result].beginTime} ~ ${eventList[result].endTime}")
+        println("[이벤트 상세]: ${eventList[result].detail}\n")
         eventList.sortedBy { it.beginTime }
         saveEventDataFile()
     }
@@ -261,8 +246,8 @@ object Calendar {
         /* 2. 이벤트들에 0, 1, 2... n 까지 번호를 매기고, 정수 k를 입력받음 */
         var target:Int?
         var selected:Int
-        println("\n[ ${year}.${month}.${day} 에 존재하는 이벤트 목록 ]")
-        print("다음 중 수정하고자 하는 이벤트의 id를 입력하시오. (-1:처음으로) >>")
+        println("\n[ ${year}.${month}.${day} 에 존재하는 일정 목록 ]")
+        print("다음 중 수정하고자 하는 일정의 id를 입력하시오. (-1:처음으로) >> ")
         while (true)
         {
             for (t in taskList)
@@ -278,7 +263,6 @@ object Calendar {
                 println("id가 일치하는 일정이 없습니다!\n다시 입력해주세요.\n")
                 continue
             }
-
             // if found task
             target = taskList.indices.find { taskList[it].id == selected }?.let {
                 /* 3. 수정할 정보 입력받은 후 수정 완료 */
@@ -287,7 +271,7 @@ object Calendar {
                 taskList[it].title = readln()
                 print("2. 일정 시작 시간 (yyyy/MM/dd hh:mm:ss) >> ")
                 taskList[it].beginTime = convertToInternalFormat(readln())
-                print("3. 이벤트 설명 >> ")
+                print("3. 일정 설명 >> ")
                 taskList[it].detail = readln()
                 it
             }
@@ -301,10 +285,10 @@ object Calendar {
         }
         /* 4. 데이터파일 갱신 */
         println("정상적으로 일정 수정이 완료되었습니다!\n")
-        println("[일정 ID]: ${taskList[target!!].id}")
-        println("[제목]: ${taskList[target].title}")
-        println("[시작 시간]: ${taskList[target].beginTime}")
-        println("[상세]: ${taskList[target].detail}\n")
+        target = target!!
+        println("[일정 제목]: ${taskList[target].title}")
+        println("[일정 시작 시간]: ${taskList[target].beginTime}")
+        println("[일정 상세]: ${taskList[target].detail}\n")
         taskList.sortedBy { it.beginTime }
         saveTaskDataFile()
     }
@@ -324,10 +308,9 @@ object Calendar {
         }
         /* 4. 데이터파일 갱신 */
         println("정상적으로 일정 수정이 완료되었습니다!\n")
-        println("[일정 ID]: ${taskList[result].id}")
-        println("[제목]: ${taskList[result].title}")
-        println("[시작 시간]: ${taskList[result].beginTime}")
-        println("[상세]: ${taskList[result].detail}\n")
+        println("[일정 제목]: ${taskList[result].title}")
+        println("[일정 시작 시간]: ${taskList[result].beginTime}")
+        println("[일정 상세]: ${taskList[result].detail}\n")
         taskList.sortedBy { it.beginTime }
         saveTaskDataFile()
     }
@@ -343,6 +326,7 @@ object Calendar {
             return
         }
         /* 2. 이벤트들에 0, 1, 2... n 까지 번호를 매기고, 정수 k를 입력받음 */
+        var title = ""
         var result:Int?
         var selected:Int
         println("\n[ ${year}.${month}.${day} 에 존재하는 이벤트 목록 ]")
@@ -365,6 +349,7 @@ object Calendar {
             // if found event
             result = eventList.indices.find { eventList[it].id == selected }?.let {
                 /* 3. 해당 요소를 List에서 제거 */
+                title = eventList[it].title
                 eventList.removeAt(it)
                 it
             }
@@ -377,13 +362,13 @@ object Calendar {
             break
         }
         /* 4. 데이터파일 갱신 */
-        println("[${selected}] 이벤트가 정상적으로 삭제되었습니다!")
+        println("\"${title}\" 이벤트가 정상적으로 삭제되었습니다!")
         saveEventDataFile()
     }
 
     fun removeEvent(e:Event)
     {
-        val idx = e.id
+        val title = e.title
         // if found event
         val result = eventList.indexOf(e).let {
             /* 3. 해당 요소를 List에서 제거 */
@@ -391,7 +376,7 @@ object Calendar {
             it
         }
         /* 4. 데이터파일 갱신 */
-        println("[${idx}] 이벤트가 정상적으로 삭제되었습니다!")
+        println("\"${title}\" 이벤트가 정상적으로 삭제되었습니다!")
         saveEventDataFile()
     }
 
@@ -406,6 +391,7 @@ object Calendar {
             return
         }
         /* 2. 일정들에 0, 1, 2... n 까지 번호를 매기고, 정수 k를 입력받음 */
+        var title = ""
         var result:Int?
         var selected:Int
         println("\n[ ${year}.${month}.${day} 에 존재하는 일정 목록 ]")
@@ -428,6 +414,7 @@ object Calendar {
             // if found task
             result = taskList.indices.find { taskList[it].id == selected }?.let {
                 /* 3. 해당 요소를 List에서 제거 */
+                title = taskList[it].title
                 taskList.removeAt(it)
                 it
             }
@@ -440,13 +427,13 @@ object Calendar {
             break
         }
         /* 4. 데이터파일 갱신 */
-        println("[${selected}] 일정이 정상적으로 삭제되었습니다!")
+        println("\"${title}\" 일정이 정상적으로 삭제되었습니다!")
         saveTaskDataFile()
     }
 
     fun removeTask(t:Task)
     {
-        val idx = t.id
+        val title = t.title
         // if found task
         val result = taskList.indexOf(t).let {
             /* 3. 해당 요소를 List에서 제거 */
@@ -454,7 +441,7 @@ object Calendar {
             it
         }
         /* 4. 데이터파일 갱신 */
-        println("[${idx}] 일정이 정상적으로 삭제되었습니다!")
+        println("\"${title}\" 일정이 정상적으로 삭제되었습니다!")
         saveTaskDataFile()
     }
 
@@ -578,10 +565,8 @@ fun runCalendar()
                         continue
                     }
                 }
-                println("[ ${year}년 ${month}월 ${day}일에 등록된 이벤트 ]")
+                println()
                 Calendar.printDailyEvents(year, month, day)
-
-                println("[ ${year}년 ${month}월 ${day}일에 등록된 일정 ]")
                 Calendar.printDailyTasks(year, month, day)
                 println()
             }
