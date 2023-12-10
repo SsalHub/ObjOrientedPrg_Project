@@ -2,6 +2,7 @@ import java.io.File
 import java.time.LocalDate
 import com.google.gson.Gson
 import input.*
+import kotlin.math.max
 
 
 object Calendar {
@@ -16,15 +17,15 @@ object Calendar {
         /* Initialize Event List */
         val eventJson = loadEventDataFile()
         val eventArray = Gson().fromJson(eventJson, Array<Event>::class.java)
-        eventArray?.toMutableList()?.let { eventList.addAll((it)) }
+        eventArray?.toMutableList()?.let { eventList.addAll(it) }
 
         /* Initialize Task List */
         val taskJson = loadTaskDataFile()
         val taskArray = Gson().fromJson(taskJson, Array<Task>::class.java)
         taskArray?.toMutableList()?.let { taskList.addAll(it) }
 
-        idCount += eventList.size
-        idCount += taskList.size
+        eventList.forEach { idCount = max(it.id, idCount) }
+        taskList.forEach { idCount = max(it.id, idCount) }
     }
 
     fun printCalendar(year:Int, month:Int) {
