@@ -15,13 +15,11 @@ object Calendar {
     /* InitCalendar() */
     init {
         /* Initialize Event List */
-        val eventJson = loadEventDataFile()
-        val eventArray = Gson().fromJson(eventJson, Array<Event>::class.java)
+        val eventArray = Gson().fromJson(File(eventPath).readText(), Array<Event>::class.java)
         eventArray?.toMutableList()?.let { eventList.addAll(it) }
 
         /* Initialize Task List */
-        val taskJson = loadTaskDataFile()
-        val taskArray = Gson().fromJson(taskJson, Array<Task>::class.java)
+        val taskArray = Gson().fromJson(File(taskPath).readText(), Array<Task>::class.java)
         taskArray?.toMutableList()?.let { taskList.addAll(it) }
 
         eventList.forEach { idCount = max(it.id+1, idCount) }
@@ -457,24 +455,30 @@ object Calendar {
         internal.substring(13..14)
     )
 
-    private fun loadEventDataFile(): String
+    private fun loadEventDataFile(): Boolean
     {
         val f = File(eventPath)
-        if (f.exists())
-            return f.readText()
+        if (!f.exists())
+        {
+            f.createNewFile()
+            return false
+        }
 
-        f.createNewFile()
-        return ""
+        eventList = Gson().fromJson(f.readText(), Array<Event>::class.java).toMutableList()
+        return true
     }
 
-    private fun loadTaskDataFile(): String
+    private fun loadTaskDataFile(): Boolean
     {
         val f = File(taskPath)
-        if (f.exists())
-            return f.readText()
+        if (!f.exists())
+        {
+            f.createNewFile()
+            return false
+        }
 
-        f.createNewFile()
-        return ""
+        taskList = Gson().fromJson(f.readText(), Array<Task>::class.java).toMutableList()
+        return true
     }
 
     private fun saveEventDataFile()
