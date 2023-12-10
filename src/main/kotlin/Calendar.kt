@@ -150,7 +150,7 @@ object Calendar {
     {
         /* 1. 날짜에 존재하는 이벤트들을 탐색함 */
         val d = "%04d%02d%02d".format(year, month, day)
-        val events:Array<Event> = eventList.filter { it.beginTime.contains(d) }.toTypedArray()
+        val events:Array<Event> = eventList.filter { it.beginTime.startsWith(d) }.toTypedArray()
         if (events.isEmpty())
         {
             println("해당 날짜에 이벤트가 존재하지 않습니다.\n")
@@ -159,12 +159,12 @@ object Calendar {
         /* 2. 이벤트들에 0, 1, 2... n 까지 번호를 매기고, 정수 k를 입력받음 */
         var target:Int?
         var selected:Int
-        println("\n[ ${year}.${month}.${day} 에 존재하는 이벤트 목록 ]")
-        print("다음 중 수정하고자 하는 이벤트의 id를 입력하시오. (-1:처음으로) >>")
         while (true)
         {
-            for (e in eventList)
+            println("\n[ ${year}.${month}.${day} 에 존재하는 이벤트 목록 ]")
+            for (e in events)
                 println("[${e.id}] ${e.title}")
+            print("위 목록 중 수정하고자 하는 이벤트의 id를 입력하시오. (-1:처음으로) >> ")
             selected = readln().toInt()
             if (selected == -1)
             {
@@ -236,7 +236,7 @@ object Calendar {
     {
         /* 1. 날짜에 존재하는 일정들을 탐색함 */
         val d = "%04d%02d%02d".format(year, month, day)
-        val tasks:Array<Task> = taskList.filter { it.beginTime.contains(d) }.toTypedArray()
+        val tasks:Array<Task> = taskList.filter { it.beginTime.startsWith(d) }.toTypedArray()
         if (tasks.isEmpty())
         {
             println("해당 날짜에 일정이 존재하지 않습니다.\n")
@@ -245,12 +245,12 @@ object Calendar {
         /* 2. 이벤트들에 0, 1, 2... n 까지 번호를 매기고, 정수 k를 입력받음 */
         var target:Int?
         var selected:Int
-        println("\n[ ${year}.${month}.${day} 에 존재하는 일정 목록 ]")
-        print("다음 중 수정하고자 하는 일정의 id를 입력하시오. (-1:처음으로) >> ")
         while (true)
         {
-            for (t in taskList)
+            println("\n[ ${year}.${month}.${day} 에 존재하는 일정 목록 ]")
+            for (t in tasks)
                 println("[${t.id}] ${t.title}")
+            print("위 목록 중 수정하고자 하는 일정의 id를 입력하시오. (-1:처음으로) >> ")
             selected = readln().toInt()
             if (selected == -1)
             {
@@ -328,11 +328,11 @@ object Calendar {
         var title = ""
         var result:Int?
         var selected:Int
-        println("\n[ ${year}.${month}.${day} 에 존재하는 이벤트 목록 ]")
-        for (e in events)
-            println("[${e.id}] ${e.title}")
         while (true)
         {
+            println("\n[ ${year}.${month}.${day} 에 존재하는 이벤트 목록 ]")
+            for (e in events)
+                println("[${e.id}] ${e.title}")
             print("위 목록 중 삭제를 원하는 이벤트의 id를 입력해 주세요.(-1:처음으로) >> ")
             selected = readln().toInt()
             if (selected == -1)
@@ -393,12 +393,12 @@ object Calendar {
         var title = ""
         var result:Int?
         var selected:Int
-        println("\n[ ${year}.${month}.${day} 에 존재하는 일정 목록 ]")
-        print("다음 중 삭제를 원하는 일정의 id를 입력해 주세요.(-1:처음으로) >> ")
         while (true)
         {
+            println("\n[ ${year}.${month}.${day} 에 존재하는 일정 목록 ]")
             for (e in taskList)
                 println("[${e.id}] ${e.title}")
+            print("위 목록 중 삭제를 원하는 일정의 id를 입력해 주세요.(-1:처음으로) >> ")
             selected = readln().toInt()
             if (selected == -1)
             {
