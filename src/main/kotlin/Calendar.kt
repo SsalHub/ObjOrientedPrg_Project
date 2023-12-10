@@ -24,8 +24,8 @@ object Calendar {
         val taskArray = Gson().fromJson(taskJson, Array<Task>::class.java)
         taskArray?.toMutableList()?.let { taskList.addAll(it) }
 
-        eventList.forEach { idCount = max(it.id, idCount) }
-        taskList.forEach { idCount = max(it.id, idCount) }
+        eventList.forEach { idCount = max(it.id+1, idCount) }
+        taskList.forEach { idCount = max(it.id+1, idCount) }
     }
 
     fun printCalendar(year:Int, month:Int) {
