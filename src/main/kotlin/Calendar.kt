@@ -128,7 +128,7 @@ object Calendar {
         if (dailyEvents.isEmpty()) {
             println("해당 날짜에 등록된 일정이 없습니다.")
         } else {
-            println("${formattedDate}의 등록된 일정:")
+            println("${year}년 ${month}월 ${day}일에 등록된 이벤트 :")
             dailyEvents.forEach {
                 println("[일정 ID]: ${it.id}")
                 println("[제목]: ${it.title}")
